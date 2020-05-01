@@ -1,6 +1,5 @@
-const PublicElection = artifacts.require("PublicElection");
+const DIDRegistry = artifacts.require("DIDRegistry");
 
 module.exports = function(deployer) {
-  deployer.deploy(PublicElection,0 ,1, []);
- 
+  deployer.deploy(DIDRegistry);
 };
