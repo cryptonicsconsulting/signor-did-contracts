@@ -11,6 +11,7 @@ contract DIDRegistry {
 
     struct DID {
         address controller;
+        address subject;
         uint256 created;
         uint256 updated;
         bytes32 metadata;
@@ -25,28 +26,31 @@ contract DIDRegistry {
     event SetController(bytes32 id, address newController);
 
     modifier onlyController(bytes32 id) {
-        require(dids[id].controller == msg.sender, "sender has no control of this DID");
+        require(dids[id].controller == msg.sender, "transaction sender is not DID controller");
         _;
     }
 
     /**
      * @dev Register new DID.
-     * @param _metadata — Arbitrary 32-byte data field. Can be later changed by their owner.
+     * @param _metadata — Arbitrary 32-byte data field. Can be later changed by the controler.
+     * @param _subject - The DID subject
      */
-    function createDID(bytes32 _metadata)
+    function createDID(address _subject, bytes32 _metadata)
         public
         returns (bytes32)
     {
-        bytes32 _hash = keccak256(abi.encodePacked(msg.sender, nonce));
+        require(_subject != address(0), "subject address cannot be 0");
+        bytes32 _id = keccak256(abi.encodePacked(msg.sender, nonce));
 
-        dids[_hash].controller = msg.sender;
-        dids[_hash].created = now;
-        dids[_hash].updated = now;
-        dids[_hash].metadata = _metadata;
+        dids[_id].controller = msg.sender;
+        dids[_id].subject = _subject;
+        dids[_id].created = now;
+        dids[_id].updated = now;
+        dids[_id].metadata = _metadata;
         nonce = nonce + 1;
 
-        emit CreatedDID(_hash, _metadata);
-        return _hash;
+        emit CreatedDID(_id, _metadata);
+        return _id;
     }
 
     /**
@@ -86,6 +90,19 @@ contract DIDRegistry {
         returns (address)
     {
         return dids[id].controller;
+    }
+
+
+     /**
+     * @dev Returns corresponding subject of a given DID
+     * @param id — The identifier (DID) to be resolved to its subject address
+     */
+    function getSubject(bytes32 id)
+        public
+        view
+        returns (address)
+    {
+        return dids[id].subject;
     }
 
     /**
