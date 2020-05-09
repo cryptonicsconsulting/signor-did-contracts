@@ -81,7 +81,7 @@ A DID resolver **MUST** be able to take a `did:signor:<network>:<id>` string as 
   '@context': 'https://w3id.org/did/v1',
   id: 'did:signor:mainet:0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4',
   publicKey: [{
-   	id: 'did:signor:mainet: 0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4#key-1',
+   	id: 'did:signor:mainet:0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4#key-1',
    	type: 'secp256k1-koblitz',
    	controller: 'did:signor:mainet0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4',
    	ethereumAddress: '0xA335e018d5d4bD9D772F25a053E91B58B8a160A8'}],
