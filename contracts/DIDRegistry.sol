@@ -14,15 +14,13 @@ contract DIDRegistry {
         address subject;
         uint256 created;
         uint256 updated;
-        bytes32 metadata;
     }
 
     mapping(bytes32 => DID) public dids;
     uint256 public nonce = 0;
 
-    event CreatedDID(bytes32 id, bytes32 metadata);
+    event CreatedDID(bytes32 id);
     event DeletedDID(bytes32 id);
-    event SetMetadata(bytes32 id, bytes32 metadata);
     event SetController(bytes32 id, address newController);
 
     modifier onlyController(bytes32 id) {
@@ -32,10 +30,9 @@ contract DIDRegistry {
 
     /**
      * @dev Register new DID.
-     * @param _metadata — Arbitrary 32-byte data field. Can be later changed by the controler.
      * @param _subject - The DID subject
      */
-    function createDID(address _subject, bytes32 _metadata)
+    function createDID(address _subject)
         public
         returns (bytes32)
     {
@@ -46,26 +43,12 @@ contract DIDRegistry {
         dids[_id].subject = _subject;
         dids[_id].created = now;
         dids[_id].updated = now;
-        dids[_id].metadata = _metadata;
         nonce = nonce + 1;
 
-        emit CreatedDID(_id, _metadata);
+        emit CreatedDID(_id);
         return _id;
     }
 
-    /**
-     * @dev Update DID metadata. Only callable by DID controller.
-     * @param id — The identifier (DID) to be updated
-     * @param _metadata — Arbitrary 32-byte value to be assigned as metadata.
-     */
-    function setMetadata(bytes32 id, bytes32 _metadata)
-        public
-        onlyController(id)
-    {
-        dids[id].metadata = _metadata;
-        dids[id].updated = now;
-        emit SetMetadata(id, _metadata);
-    }
 
     /**
      * @dev Remove DID. Only callable by DID controller.
