@@ -38,7 +38,7 @@ DIDs are registered in the DID Registry on-chain, and have a controller and a su
 
 Identifier strings are generated in the following line of the `DIDRegistry` contract:
 
-```
+```javascript
 bytes32 _hash = keccak256(abi.encodePacked(msg.sender, nonce));
 ```
 
@@ -48,7 +48,7 @@ Where `nonce` is a unique number on each call, so that the result is considered 
 
 Every DID record on the ledger presents the following structure:
 
-```
+```javascript
 struct DID {
         address controller;
         address subject;
