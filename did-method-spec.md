@@ -11,13 +11,13 @@ The functionality for this method is provided by the `DIDRegistry` smart contrac
 
 This method shall be identified with the name `sginaor`. A Signor DID has the following format:
 
-```
+```javascript
 did:signor:<network>:<32 byte hexadecimal string>
 ```
 
 For example:
 
-```
+```javascript
 did:signor:mainet:0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4
 ```
 
