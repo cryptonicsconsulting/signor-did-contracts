@@ -1,4 +1,4 @@
-# Signor DID Method Specification
+# Signor DID Method Specification v0.1
 
 This document specifies the DID method for Signor.
 
