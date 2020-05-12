@@ -107,3 +107,11 @@ The following method is provided by the ledger contract:
 
 Only the controller address is able to delete an existing DID. 
 
+# Security Considerations
+
+- DID documents are generated dynamically by off-chain resolvers that perform read from the ledger. This means that these resolvers are essentially trusted code and care must be taken when obtaining such a resolver. For instance integrity verification of library downloads should be performed.
+- Key recovery is out of scope of this method. Proper key management in user-level wallets or additional smart contracts should be implemented. 
+
+# Privacy Considerations
+
+This DID method only stores Ethereum addresses derived from public keys and modification timestamps on the ledger. Therefore, there are no privacy concern implicit to the method. However, care must be taken when using a single DID for several purposes if correlation is undesired. 
