@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-import "@openzeppelin/contracts/utils/EnumerableSet.sol";
 
 /**
  * @title DIDRegistry
@@ -11,15 +10,31 @@ import "@openzeppelin/contracts/utils/EnumerableSet.sol";
  */
 contract DIDRegistry {
 
+
     struct DID {
         address controller;
         address subject;
         uint256 created;
         uint256 updated;
+        Key[] keys;
     }
 
+
+    enum KeyPurpose { Authentication, Signing, Ecryption }
+
+    //public key
+    struct Key {
+        bytes32 x;
+        bytes32 y;
+        KeyPurpose purpose;
+        string curve;
+    }
+
+
     mapping(bytes32 => DID) public dids;
+
     uint256 public nonce = 0;
+
 
     event CreatedDID(bytes32 id);
     event DeletedDID(bytes32 id);
@@ -102,5 +117,14 @@ contract DIDRegistry {
         dids[id].controller = newController;
         dids[id].updated = now;
         emit SetController(id, newController);
+    }
+
+
+    function addKey(bytes32 id, bytes32 _x, bytes32 _y, KeyPurpose _purpose, string memory _curve)
+        public
+        onlyController(id)
+    {
+        dids[id].keys.push(Key(_x, _y, _purpose, _curve));
+
     }
 }
