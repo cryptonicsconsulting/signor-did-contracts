@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 
 /**
@@ -19,8 +20,7 @@ contract DIDRegistry {
         Key[] keys;
     }
 
-
-    enum KeyPurpose { Authentication, Signing, Ecryption }
+    enum KeyPurpose { Authentication, Signing, Encryption }
 
     //public key
     struct Key {
@@ -79,7 +79,6 @@ contract DIDRegistry {
         emit DeletedDID(id);
     }
 
-
     /**
      * @dev Returns corresponding controller for given DID
      * @param id — The identifier (DID) to be resolved to its controller address
@@ -105,6 +104,28 @@ contract DIDRegistry {
         return dids[id].subject;
     }
 
+    /*https://medium.com/coinmonks/solidity-tutorial-returning-structs-from-public-functions-e78e48efb378*/
+
+    function getKeys(bytes32 id) public view returns ( bytes32[] memory, bytes32[] memory, uint[] memory, string[] memory){
+        DID memory did = dids[id];
+        uint keysLength = did.keys.length;
+
+        bytes32[] memory x;
+        bytes32[] memory y;
+        uint[] memory purpose;
+        string[] memory curve;
+
+        for(uint i = 0; i < keysLength; i++) {
+            Key memory key = did.keys[i];
+            x[i] = key.x;
+            y[i] = key.y;
+            purpose[i] = uint(key.purpose);
+            curve[i] = key.curve;
+        }
+
+        return (x,y,purpose,curve);
+    }
+
     /**
      * @dev Change controller address. Only callable by current DID controller.
      * @param id — The identifier (DID) to be updated
@@ -120,6 +141,7 @@ contract DIDRegistry {
     }
 
 
+    /*Should ckeck if DID exists before allowing key to be added*/
     function addKey(bytes32 id, bytes32 _x, bytes32 _y, KeyPurpose _purpose, string memory _curve)
         public
         onlyController(id)
