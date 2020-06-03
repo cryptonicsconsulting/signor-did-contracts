@@ -1,7 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
-pragma experimental ABIEncoderV2;
-
 
 /**
  * @title DIDRegistry
@@ -10,7 +8,6 @@ pragma experimental ABIEncoderV2;
  * different adddress by their current controller.
  */
 contract DIDRegistry {
-
 
     struct DID {
         address controller;
@@ -104,26 +101,13 @@ contract DIDRegistry {
         return dids[id].subject;
     }
 
-    /*https://medium.com/coinmonks/solidity-tutorial-returning-structs-from-public-functions-e78e48efb378*/
+    function getKeysLength(bytes32 id) public view returns(uint) {
+        return dids[id].keys.length;
+    }
 
-    function getKeys(bytes32 id) public view returns ( bytes32[] memory, bytes32[] memory, uint[] memory, string[] memory){
-        DID memory did = dids[id];
-        uint keysLength = did.keys.length;
-
-        bytes32[] memory x;
-        bytes32[] memory y;
-        uint[] memory purpose;
-        string[] memory curve;
-
-        for(uint i = 0; i < keysLength; i++) {
-            Key memory key = did.keys[i];
-            x[i] = key.x;
-            y[i] = key.y;
-            purpose[i] = uint(key.purpose);
-            curve[i] = key.curve;
-        }
-
-        return (x,y,purpose,curve);
+    function retrieveKey(bytes32 id, uint index) public view returns (bytes32, bytes32, uint, string memory) {
+        uint purpose = uint(dids[id].keys[index].purpose);
+        return (dids[id].keys[index].x,dids[id].keys[index].y, purpose,dids[id].keys[index].curve);
     }
 
     /**
