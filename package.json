@@ -4,6 +4,7 @@
   "description": "A smart contract system for decentralized identity management compliant with the [W3C Decentralized Identifiers (DIDs) v1.0 specification (draft)](https://w3c.github.io/did-core).",
   "main": "truffle-config.js",
   "dependencies": {
+    "browserify-shim": "^3.8.14",
     "chai": "^4.2.0",
     "dotenv": "^8.2.0",
     "eccrypto": "^1.1.3",
@@ -11,6 +12,7 @@
     "key-encoder": "^2.0.3",
     "mocha": "^7.2.0",
     "path": "^0.12.7",
+    "save": "^2.4.0",
     "underscore": "^1.10.2",
     "web3": "^1.2.8"
   },

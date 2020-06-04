@@ -32798,15 +32798,41 @@ async function getContract() {
     return contract
 }
 
+//https://ethereum.stackexchange.com/questions/12033/sign-message-with-metamask-and-verify-with-ethereumjs-utils
 async function generatePublicKey() {
-    // console.log(web3)
-    // console.log(account)
+    let msg = 'test'
 
-    //  let signature = web3.personal.sign(web3.fromUtf8("dinosaur"), account);
-    let signature = await web3.eth.personal.sign('Test', account);
-    //let signature = await web3.eth.sign("test",account);
-    // console.log("DONE SINGING")
-    console.log(signature)
+    let signature = await web3.eth.personal.sign(web3.utils.fromUtf8(msg), account);
+
+    var r = signature.slice(0, 66)
+    var s = '0x' + signature.slice(66, 130)
+    var v = '0x' + signature.slice(130, 132)
+    v = parseInt(v)
+
+    // console.log(r,s,v)
+
+    const msgBuffer = ethereumJsUtil.toBuffer(web3.utils.fromUtf8(msg));
+    const msgHash = ethereumJsUtil.hashPersonalMessage(msgBuffer);
+     
+    r = ethereumJsUtil.toBuffer(r)
+    s = ethereumJsUtil.toBuffer(s)
+    
+    const publicKey = ethereumJsUtil.ecrecover(
+        msgHash,
+        v,
+        r,
+        s
+      );
+      
+    //   console.log(publicKey)
+
+      const addressBuffer = ethereumJsUtil.publicToAddress(publicKey);
+      const address = ethereumJsUtil.bufferToHex(addressBuffer);
+      
+      alert(address)
+      console.log(address); // Prints my initial web3.eth.coinbase
+      
+
 }
 },{"ethereumjs-util":402,"web3":605}],229:[function(require,module,exports){
 "use strict";
