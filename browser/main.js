@@ -1,12 +1,22 @@
 let ethereumJsUtil = require('ethereumjs-util')
 var Web3 = require('web3');
+let {
+    createPemFromPublicKey,
+    createDID,
+    addKey,
+    getKeys,
+    getDIDDocument,
+    getKeyLength,
+    convertToKeyPurpose
+} = require('../lib/index')
 
 let web3, account
 
 // // Wait for loading completion to avoid race conditions with web3 injection timing.
 window.addEventListener("load", async () => {
-    document.getElementById("generatePublicKey").onclick = generatePublicKey;
-    document.getElementById("createDID").onclick = createDID;
+    // document.getElementById("generatePublicKey").onclick = generatePublicKey;
+    document.getElementById("createDID").onclick = browserCreateDID;
+    document.getElementById("getDIDDocument").onclick = showDidDocument;
 
     // Modern dapp browsers...
     if (window.ethereum) {
@@ -34,10 +44,6 @@ window.addEventListener("load", async () => {
     }
 })
 
-async function getContract() {
-    let contract = new web3.eth.Contract(DIDAbi,DIDContractAddress)
-    return contract
-}
 
 //https://ethereum.stackexchange.com/questions/12033/sign-message-with-metamask-and-verify-with-ethereumjs-utils
 async function generatePublicKey() {
@@ -53,7 +59,7 @@ async function generatePublicKey() {
     r = ethereumJsUtil.toBuffer(r)
     s = ethereumJsUtil.toBuffer(s)
     
-    const publicKey = ethereumJsUtil.ecrecover(
+    let publicKey = ethereumJsUtil.ecrecover(
         msgHash,
         v,
         r,
@@ -62,23 +68,21 @@ async function generatePublicKey() {
       
 
     publicKey = ethereumJsUtil.bufferToHex(publicKey)
-    return publicKey
-    // const address = ethereumJsUtil.bufferToHex(addressBuffer);
-
-    
     // console.log(ethereumJsUtil.bufferToHex(publicKey))
-
     // const addressBuffer = ethereumJsUtil.publicToAddress(publicKey);
     // const address = ethereumJsUtil.bufferToHex(addressBuffer);
+    return publicKey
 }
 
-async function createDID() {
-    let DIDContract = await getContract()
-    let response = await DIDContract.methods.createDID(account).send({
-        from: account,
-        gas: 1500000
-    })
+async function browserCreateDID() {
+    let publicKey = await generatePublicKey()
+    console.log('public key' + publicKey)
+    let id = await createDID(account,null,true,publicKey)
+    document.getElementById("did").value = "did:signor:mainnet:"+id;
+}
 
-    console.log(response)
 
+async function showDidDocument() {
+    let didDocument = await getDIDDocument(document.getElementById("did").value)
+    document.getElementById("didDocument").value = JSON.stringify(didDocument);   
 }

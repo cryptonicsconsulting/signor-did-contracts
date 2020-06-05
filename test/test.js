@@ -13,7 +13,7 @@ let {createPemFromPublicKey,
 let { ECCurve, KeyPurpose, PUB1 , PUB2 ,DIDContractAddress} = require('../config/constants')
 
 //1. ganache-cli -d DID
-//2. truffle deploy --network development
+//2. npm test
 
 describe("DID Registery", () => {
 

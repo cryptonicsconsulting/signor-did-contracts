@@ -20,7 +20,9 @@
     "http-server": "^0.12.3"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "truffle deploy && mocha",
+    "browser": "cd browser && browserify main.js -o index.js && http-server"
+
   },
   "repository": {
     "type": "git",
