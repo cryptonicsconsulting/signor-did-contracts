@@ -18,7 +18,7 @@ let { ECCurve, KeyPurpose, PUB1 , PUB2 ,DIDContractAddress} = require('../config
 describe("DID Registery", () => {
 
     it('Create DID', async () => {
-        let id = await createDID(PUB1, process.env.PK1);
+        let id = await createDID(PUB1, process.env.PK1, false, null);
         expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
     })
 
@@ -63,8 +63,7 @@ describe("DID Registery", () => {
         let correctResponse = '{"@context":"https://w3id.org/did/v1","id":"0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc","publicKey":[{"id":"did:signor:mainnet:0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc#key-0","type":"secp256k1-koblitz","controller":"did:signor:mainnet:0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc","ethereumAddress":"0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"}],"authentication":[{"id":"0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc#keys-1","type":"secp256k1-koblitz","controller":"0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc","publicKeyPem":"-----BEGIN PUBLIC KEY-----\\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE5orPwCU6EGIN/3BrChsfH1gz6jvrO94i\\nUNXycfNWNgZnLrxF4LfqLoFuy3DKAxN7HJR27sY9RjLpkAILe2+6OQ==\\n-----END PUBLIC KEY-----"}]}'
         let response = await getDIDDocument(did)
         response = JSON.stringify(response)
-        expect(correctResponse).to.equals(response);  
-
+        expect(correctResponse).to.equals(response);
     })
 
 })

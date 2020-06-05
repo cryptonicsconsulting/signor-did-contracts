@@ -6,6 +6,7 @@ let web3, account
 // // Wait for loading completion to avoid race conditions with web3 injection timing.
 window.addEventListener("load", async () => {
     document.getElementById("generatePublicKey").onclick = generatePublicKey;
+    document.getElementById("createDID").onclick = createDID;
 
     // Modern dapp browsers...
     if (window.ethereum) {
@@ -41,16 +42,11 @@ async function getContract() {
 //https://ethereum.stackexchange.com/questions/12033/sign-message-with-metamask-and-verify-with-ethereumjs-utils
 async function generatePublicKey() {
     let msg = 'test'
-
     let signature = await web3.eth.personal.sign(web3.utils.fromUtf8(msg), account);
-
     var r = signature.slice(0, 66)
     var s = '0x' + signature.slice(66, 130)
     var v = '0x' + signature.slice(130, 132)
     v = parseInt(v)
-
-    // console.log(r,s,v)
-
     const msgBuffer = ethereumJsUtil.toBuffer(web3.utils.fromUtf8(msg));
     const msgHash = ethereumJsUtil.hashPersonalMessage(msgBuffer);
      
@@ -64,13 +60,25 @@ async function generatePublicKey() {
         s
       );
       
-    //   console.log(publicKey)
 
-      const addressBuffer = ethereumJsUtil.publicToAddress(publicKey);
-      const address = ethereumJsUtil.bufferToHex(addressBuffer);
-      
-      alert(address)
-      console.log(address); // Prints my initial web3.eth.coinbase
-      
+    publicKey = ethereumJsUtil.bufferToHex(publicKey)
+    return publicKey
+    // const address = ethereumJsUtil.bufferToHex(addressBuffer);
+
+    
+    // console.log(ethereumJsUtil.bufferToHex(publicKey))
+
+    // const addressBuffer = ethereumJsUtil.publicToAddress(publicKey);
+    // const address = ethereumJsUtil.bufferToHex(addressBuffer);
+}
+
+async function createDID() {
+    let DIDContract = await getContract()
+    let response = await DIDContract.methods.createDID(account).send({
+        from: account,
+        gas: 1500000
+    })
+
+    console.log(response)
 
 }
