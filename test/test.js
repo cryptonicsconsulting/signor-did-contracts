@@ -1,16 +1,23 @@
 require('dotenv').config({ path: './.env'});
+let Web3 = require('web3');
+
 
 const chai = require("chai");
 const { expect } = chai;
 
-let {createPemFromPublicKey,
+let {init,
+    createPemFromPublicKey,
     createDID,
     addKey,
     getKeys,
     getDIDDocument,
-    getKeyLength,convertToKeyPurpose} = require('../lib/index')
+    getKeyLength,convertToKeyPurpose} = require('../lib/resolver.js')
 
 let { ECCurve, KeyPurpose, PUB1 , PUB2 ,DIDContractAddress} = require('../config/constants')
+
+web3 = new Web3('http://localhost:8545');
+
+init(web3);
 
 //1. ganache-cli -d DID
 //2. npm test
