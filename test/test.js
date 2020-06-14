@@ -6,6 +6,8 @@ const chai = require("chai");
 const { expect } = chai;
 
 let {init,
+    createDIDRaw,
+    createAddKeyRaw,
     createPemFromPublicKey,
     createDID,
     addKey,
@@ -16,23 +18,42 @@ let {init,
 let { ECCurve, KeyPurpose, PUB1 , PUB2 ,DIDContractAddress} = require('../config/constants')
 
 web3 = new Web3('http://localhost:8545');
+let chainId = 1591661810665
 
-init(web3);
+init(web3,chainId);
 
 //1. ganache-cli -d DID
 //2. npm test
+//1591661810665
 
-describe("DID Registery", () => {
+describe("DID Registry", () => {
 
     it('Create DID', async () => {
-        let id = await createDID(PUB1, process.env.PK1, false, null);
-        expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
+        let signedTx = await createDIDRaw(PUB1,PUB1,process.env.PK1,chainId)
+        await web3.eth.sendSignedTransaction(signedTx).on('receipt', (out) => {
+                let id = out.logs[0].data
+                expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
+            }
+        );
     })
 
-    it('Get key length for a did', async ()=> {
-        let length = await getKeyLength('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc')
-        expect(parseInt(length)).to.equals(1)
+    it('Add Key and check key length', async () => {
+        let x = '0xe68acfc0253a10620dff706b0a1b1f1f5833ea3beb3bde2250d5f271f3563606'
+        let y = '0x672ebc45e0b7ea2e816ecb70ca03137b1c9476eec63d4632e990020b7b6fba39'
+        let id = '0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc'
+
+        let signedTx = await createAddKeyRaw(PUB1,process.env.PK1,id,x,y,KeyPurpose.Authentication,ECCurve)
+        await web3.eth.sendSignedTransaction(signedTx).on('receipt', async (out) => {
+                let length = await getKeyLength('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc')
+                expect(parseInt(length)).to.equals(1)
+            }
+        );
     })
+
+    // it('Get key length for a did', async ()=> {
+    //     let length = await getKeyLength('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc')
+    //     expect(parseInt(length)).to.equals(1)
+    // })
 
     it('Convert X Y coordinates to PEM', async () => {
         let x = '0xe68acfc0253a10620dff706b0a1b1f1f5833ea3beb3bde2250d5f271f3563606'
