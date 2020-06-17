@@ -125,7 +125,7 @@ contract DIDRegistry {
     }
 
 
-    /*Should ckeck if DID exists before allowing key to be added*/
+    
     function addKey(bytes32 id, bytes32 _x, bytes32 _y, KeyPurpose _purpose, string memory _curve)
         public
         onlyController(id)

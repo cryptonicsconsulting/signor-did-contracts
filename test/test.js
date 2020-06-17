@@ -1,6 +1,11 @@
 require('dotenv').config({ path: './.env'});
 let Web3 = require('web3');
 
+let PUB1 = '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
+
+//NOT IN GANACHE
+let PUB2 = '0xB1Fe56C22612d38565c44C0eE6D2B22e31A3D388'
+
 
 const chai = require("chai");
 const { expect } = chai;
@@ -15,7 +20,7 @@ let {init,
     getDIDDocument,
     getKeyLength,convertToKeyPurpose} = require('../lib/resolver.js')
 
-let { ECCurve, KeyPurpose, PUB1 , PUB2 ,DIDContractAddress} = require('../config/constants')
+let { ECCurve, KeyPurpose ,DIDContractAddress} = require('../config/constants')
 
 web3 = new Web3('http://localhost:8545');
 let chainId = 1591661810665
