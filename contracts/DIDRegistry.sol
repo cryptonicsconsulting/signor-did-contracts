@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
 
-
 /**
  * @title DIDRegistry
  * @dev DID Registry for the Signor DID method.
@@ -9,7 +8,6 @@ pragma solidity ^0.6.0;
  * different adddress by their current controller.
  */
 contract DIDRegistry {
-
 
     struct DID {
         address controller;
@@ -19,8 +17,7 @@ contract DIDRegistry {
         Key[] keys;
     }
 
-
-    enum KeyPurpose { Authentication, Signing, Ecryption }
+    enum KeyPurpose { Authentication, Signing, Encryption }
 
     //public key
     struct Key {
@@ -79,7 +76,6 @@ contract DIDRegistry {
         emit DeletedDID(id);
     }
 
-
     /**
      * @dev Returns corresponding controller for given DID
      * @param id — The identifier (DID) to be resolved to its controller address
@@ -105,6 +101,15 @@ contract DIDRegistry {
         return dids[id].subject;
     }
 
+    function getKeysLength(bytes32 id) public view returns(uint) {
+        return dids[id].keys.length;
+    }
+
+    function retrieveKey(bytes32 id, uint index) public view returns (bytes32, bytes32, uint, string memory) {
+        uint purpose = uint(dids[id].keys[index].purpose);
+        return (dids[id].keys[index].x,dids[id].keys[index].y, purpose,dids[id].keys[index].curve);
+    }
+
     /**
      * @dev Change controller address. Only callable by current DID controller.
      * @param id — The identifier (DID) to be updated
@@ -120,6 +125,7 @@ contract DIDRegistry {
     }
 
 
+    
     function addKey(bytes32 id, bytes32 _x, bytes32 _y, KeyPurpose _purpose, string memory _curve)
         public
         onlyController(id)
