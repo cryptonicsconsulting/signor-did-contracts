@@ -24,7 +24,7 @@ contract DIDRegistry {
         bytes32 x;
         bytes32 y;
         KeyPurpose purpose;
-        string curve;
+        bytes32 curve;
     }
 
 
@@ -105,7 +105,7 @@ contract DIDRegistry {
         return dids[id].keys.length;
     }
 
-    function retrieveKey(bytes32 id, uint index) public view returns (bytes32, bytes32, uint, string memory) {
+    function retrieveKey(bytes32 id, uint index) public view returns (bytes32, bytes32, uint, bytes32) {
         uint purpose = uint(dids[id].keys[index].purpose);
         return (dids[id].keys[index].x,dids[id].keys[index].y, purpose,dids[id].keys[index].curve);
     }
@@ -125,11 +125,20 @@ contract DIDRegistry {
     }
 
 
-    function addKey(bytes32 id, bytes32 _x, bytes32 _y, KeyPurpose _purpose, string memory _curve)
+    function addKey(bytes32 id, bytes32 _x, bytes32 _y, KeyPurpose _purpose, bytes32 _curve)
         public
         onlyController(id)
     {
         dids[id].keys.push(Key(_x, _y, _purpose, _curve));
 
+    }
+
+    function addKeys(bytes32 id, bytes32[] memory _x, bytes32[] memory _y, KeyPurpose[] memory _purpose, bytes32[] memory _curve)
+        public
+        onlyController(id)
+    {
+        for (uint i = 0; i > _x.length; i++) {
+            dids[id].keys.push(Key(_x[i], _y[i], _purpose[i], _curve[i]));
+        }
     }
 }
