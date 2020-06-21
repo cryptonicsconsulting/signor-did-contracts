@@ -6,7 +6,7 @@ let PUB1 = '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
 //NOT IN GANACHE
 let PUB2 = '0xB1Fe56C22612d38565c44C0eE6D2B22e31A3D388'
 
-
+const PK1 = '0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d';
 const chai = require("chai");
 const { expect } = chai;
 
@@ -33,13 +33,20 @@ init(web3,chainId);
 
 describe("DID Registry", () => {
 
+    // it('Create DID', async () => {
+    //     let signedTx = await createDIDRaw(PUB1,PUB1,process.env.PK1,chainId)
+    //     await web3.eth.sendSignedTransaction(signedTx).on('receipt', (out) => {
+    //             let id = out.logs[0].data
+    //             expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
+    //         }
+    //     );
+    // })
+
     it('Create DID', async () => {
-        let signedTx = await createDIDRaw(PUB1,PUB1,process.env.PK1,chainId)
-        await web3.eth.sendSignedTransaction(signedTx).on('receipt', (out) => {
-                let id = out.logs[0].data
-                expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
-            }
-        );
+        let receipt = await createDID(PUB1,PUB1);
+        let id = receipt.events.CreatedDID.returnValues.id;
+        expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
+           
     })
 
     it('Add Key and check key length', async () => {
@@ -47,7 +54,7 @@ describe("DID Registry", () => {
         let y = '0x672ebc45e0b7ea2e816ecb70ca03137b1c9476eec63d4632e990020b7b6fba39'
         let id = '0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc'
 
-        let signedTx = await createAddKeyRaw(PUB1,process.env.PK1,id,x,y,KeyPurpose.Authentication,ECCurve)
+        let signedTx = await createAddKeyRaw(PUB1, PK1,id,x,y,KeyPurpose.Authentication,ECCurve)
         await web3.eth.sendSignedTransaction(signedTx).on('receipt', async (out) => {
                 let length = await getKeyLength('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc')
                 expect(parseInt(length)).to.equals(1)
