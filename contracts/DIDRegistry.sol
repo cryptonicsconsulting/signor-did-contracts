@@ -137,7 +137,7 @@ contract DIDRegistry {
         public
         onlyController(id)
     {
-        for (uint i = 0; i > _x.length; i++) {
+        for (uint i = 0; i < _x.length; i++) {
             dids[id].keys.push(Key(_x[i], _y[i], _purpose[i], _curve[i]));
         }
     }

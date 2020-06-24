@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './.env'});
+
 let Web3 = require('web3');
 
 let PUB1 = '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1'
@@ -12,20 +12,21 @@ const { expect } = chai;
 
 let {init,
     createDIDRaw,
-    createAddKeyRaw,
+    addKeyRaw,
     createPemFromPublicKey,
     createDID,
     addKey,
     getKeys,
     getDIDDocument,
-    getKeyLength,convertToKeyPurpose} = require('../lib/resolver.js')
+    getKeyLength,
+    convertToKeyPurpose} = require('../lib/resolver.js')
 
 let { ECCurve, KeyPurpose ,DIDContractAddress} = require('../config/constants')
 
 web3 = new Web3('http://localhost:8545');
-let chainId = 1591661810665
 
-init(web3,chainId);
+
+init(web3);
 
 //1. ganache-cli -d DID
 //2. npm test
@@ -33,28 +34,28 @@ init(web3,chainId);
 
 describe("DID Registry", () => {
 
-    // it('Create DID', async () => {
-    //     let signedTx = await createDIDRaw(PUB1,PUB1,process.env.PK1,chainId)
-    //     await web3.eth.sendSignedTransaction(signedTx).on('receipt', (out) => {
-    //             let id = out.logs[0].data
-    //             expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
-    //         }
-    //     );
-    // })
-
     it('Create DID', async () => {
-        let receipt = await createDID(PUB1,PUB1);
-        let id = receipt.events.CreatedDID.returnValues.id;
-        expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
-           
+        let signedTx = await createDIDRaw(PUB1,PUB1,PK1)
+        await web3.eth.sendSignedTransaction(signedTx).on('receipt', (out) => {
+                let id = out.logs[0].data
+                expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
+            }
+        );
     })
+
+    // it('Create DID', async () => {
+    //     let receipt = await createDID(PUB1,PUB1);
+    //     let id = receipt.events.CreatedDID.returnValues.id;
+    //     expect(id).to.equals('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc');
+           
+    // })
 
     it('Add Key and check key length', async () => {
         let x = '0xe68acfc0253a10620dff706b0a1b1f1f5833ea3beb3bde2250d5f271f3563606'
         let y = '0x672ebc45e0b7ea2e816ecb70ca03137b1c9476eec63d4632e990020b7b6fba39'
         let id = '0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc'
 
-        let signedTx = await createAddKeyRaw(PUB1, PK1,id,x,y,KeyPurpose.Authentication,ECCurve)
+        let signedTx = await addKeyRaw(PUB1, PK1,id,x,y,KeyPurpose.Authentication,ECCurve)
         await web3.eth.sendSignedTransaction(signedTx).on('receipt', async (out) => {
                 let length = await getKeyLength('0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc')
                 expect(parseInt(length)).to.equals(1)
@@ -89,7 +90,7 @@ describe("DID Registry", () => {
         let keys = [{
             x:"0xe68acfc0253a10620dff706b0a1b1f1f5833ea3beb3bde2250d5f271f3563606",
             y:"0x672ebc45e0b7ea2e816ecb70ca03137b1c9476eec63d4632e990020b7b6fba39",
-            keyPurpose:"Authentication",
+            keyPurpose: "0",
             curve:"secp256k1-koblitz"
         }]
         keys = JSON.stringify(keys)
@@ -100,10 +101,8 @@ describe("DID Registry", () => {
 
     it('Get did document', async() => {
         let did ="did:signor:mainnet:0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc"
-        let correctResponse = '{"@context":"https://w3id.org/did/v1","id":"0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc","publicKey":[{"id":"did:signor:mainnet:0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc#key-0","type":"secp256k1-koblitz","controller":"did:signor:mainnet:0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc","ethereumAddress":"0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"}],"authentication":[{"id":"0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc#keys-1","type":"secp256k1-koblitz","controller":"0x88987af7d35eabcad95915b93bfd3d2bc3308f06b7197478b0dfca268f0497dc","publicKeyPem":"-----BEGIN PUBLIC KEY-----\\nMFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAE5orPwCU6EGIN/3BrChsfH1gz6jvrO94i\\nUNXycfNWNgZnLrxF4LfqLoFuy3DKAxN7HJR27sY9RjLpkAILe2+6OQ==\\n-----END PUBLIC KEY-----"}]}'
         let response = await getDIDDocument(did)
-        response = JSON.stringify(response)
-        expect(correctResponse).to.equals(response);
+        expect(response.did).to.equals(did);
     })
 
 })
