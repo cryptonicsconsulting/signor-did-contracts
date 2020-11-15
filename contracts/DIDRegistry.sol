@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.6.0;
+pragma solidity ^0.7.0;
 
 /**
  * @title DIDRegistry
@@ -55,8 +55,8 @@ contract DIDRegistry {
 
         dids[_id].controller = msg.sender;
         dids[_id].subject = _subject;
-        dids[_id].created = now;
-        dids[_id].updated = now;
+        dids[_id].created = block.timestamp;
+        dids[_id].updated = block.timestamp;
         nonce = nonce + 1;
 
         emit CreatedDID(_id);
@@ -120,7 +120,7 @@ contract DIDRegistry {
         onlyController(id)
     {
         dids[id].controller = newController;
-        dids[id].updated = now;
+        dids[id].updated = block.timestamp;
         emit SetController(id, newController);
     }
 
