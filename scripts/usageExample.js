@@ -21,20 +21,20 @@ async function main() {
     //create a did
     let did = lib.createDID(signers[1].address);
 
-    //read controller and subject for the newly created did
+    //read controller for the newly created did
     let controller = await lib.getController(did);
-    let subject = await lib.getSubject(did); 
+    
 
     console.log("Controller: " + controller);
-    console.log("Subject: " + subject);
+    console.log("Subject: " + signers[0].address);
 
 
     await lib.deleteDID(did);
     controller = await lib.getController(did);
-    subject = await lib.getSubject(did); 
+  
 
     console.log("Controller: " + controller);
-    console.log("Subject: " + subject);
+    
 
   }
   

@@ -21,22 +21,11 @@ describe("DID", function() {
     let did = receipt.events[0].args[0];
     
     let controller = await didReg.getController(did);
-    let subject = await didReg.getSubject(did); 
+   
     expect(controller).to.equal(accounts[0].address);
-    expect(subject).to.equal(accounts[1].address);
+   
   });
 
-  it("Should be possible to control own did", async function() {
-    let tx = await didReg.createDID(accounts[0].address);
-    let receipt = await tx.wait(1); 
-       
-    let did = receipt.events[0].args[0];
-    
-    let controller = await didReg.getController(did);
-    let subject = await didReg.getSubject(did); 
-    expect(controller).to.equal(accounts[0].address);
-    expect(subject).to.equal(accounts[0].address);
-  });
 
 
   it("Should be possible to delete a did", async function() {
@@ -44,13 +33,13 @@ describe("DID", function() {
     let receipt = await tx.wait(1); 
        
     let did = receipt.events[0].args[0];
-    let subject = await didReg.getSubject(did); 
-    expect(subject).to.equal(accounts[0].address);
+    let controller = await didReg.getController(did); 
+    expect(controller).to.equal(accounts[0].address);
     
     await didReg.deleteDID(did);
 
-    subject = await didReg.getSubject(did);
-    expect(subject).to.equal('0x0000000000000000000000000000000000000000');
+    controller = await didReg.getController(did);
+    expect(controller).to.equal('0x0000000000000000000000000000000000000000');
     
   });
 
