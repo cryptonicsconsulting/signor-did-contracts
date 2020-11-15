@@ -19,7 +19,7 @@ async function main() {
 
   await did.deployed();
 
-  console.log("Greeter deployed to:", did.address);
+  console.log("DIDGREgistry deployed to:", did.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
