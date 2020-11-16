@@ -5,4 +5,3 @@ The Signor DID method specification can be found [here](https://github.com/crypt
 
 A library for Node.ja and browser can be found in https://github.com/cryptonicsconsulting/signor-did-contracts/tree/master/lib.
 
-Also includes a register for verifiable claims based on the [ERC-780 proposal](https://github.com/ethereum/EIPs/issues/780) (may be replaced by an [ERC-1812](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1812.md) implementation). 

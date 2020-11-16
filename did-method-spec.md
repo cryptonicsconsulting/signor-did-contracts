@@ -103,4 +103,4 @@ Only the controller address is able to delete an existing DID.
 
 # Privacy Considerations
 
-This DID method only stores Ethereum addresses derived from public keys and modification timestamps on the ledger. Therefore, there are no privacy concern implicit to the method. However, care must be taken when using a single DID for several purposes if correlation is undesired. 
+This DID method only stores Ethereum addresses derived from public keys and modification timestamps on the ledger. Therefore, there are no privacy concerns implicit to the method. However, care must be taken when using a single DID for several purposes if correlation is undesired.
