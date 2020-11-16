@@ -9,19 +9,19 @@ The functionality for this method is provided by the `DIDRegistry` smart contrac
 
 ## DID Scheme
 
-This method shall be identified with the name `sginaor`. A Signor DID has the following format:
+This method shall be identified with the name `sginor`. A Signor DID has the following format:
 
 ```javascript
-did:signor:<network>:<32 byte hexadecimal string>
+did:signor:<network>:<20 byte hexadecimal string>
 ```
 
 For example:
 
 ```javascript
-did:signor:mainet:0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4
+did:signor:mainet:0x70997970C51812dc3A010C7d01b50e0d17dc79C8
 ```
 
-The `<32 byte hexadecimal string>` corresponds to a `keccak256` hash of an Ethereum address concatenated with a nonce as generated in the [DIDRegistry smart contract](https://github.com/cryptonicsconsulting/signor-did-contracts/blob/master/contracts/DIDRegistry.sol).  
+The `<20 byte hexadecimal string>` corresponds to an Ethereum address in the current implementation, but maybe abstracted to different identfiers when implemented on different networks.  
 
 The `<network>` string corresponds to human readable form of an distributed ledger capable of running Ethereum smart contracts, including the following:
 
@@ -34,15 +34,6 @@ The `<network>` string corresponds to human readable form of an distributed ledg
 
 DIDs are registered in the DID Registry on-chain, and have a controller and a subject, expressed in the form of Ethereum addresses. The DID controller may or may not be the subject itself. Multiple controllers can be implemented through proxy smart contracts. 
 
-### ID-String Generation
-
-Identifier strings are generated in the following line of the `DIDRegistry` contract:
-
-```javascript
-bytes32 _hash = keccak256(abi.encodePacked(msg.sender, nonce));
-```
-
-Where `nonce` is a unique number on each call, so that the result is considered random and an address is able to create and control multiple DIDs.
 
 ## DID Structure On-chain
 
@@ -51,13 +42,15 @@ Every DID record on the ledger presents the following structure:
 ```javascript
 struct DID {
         address controller;
-        address subject;
         uint256 created;
         uint256 updated;
 }
 ```
+The subject is simply the DIDs Ehereum address and this is mapped to the above data structure:
 
-
+```javascript
+mapping(address => DID) public dids;
+```
 
 ## CRUD Operations
 
@@ -79,37 +72,33 @@ A DID resolver **MUST** be able to take a `did:signor:<network>:<id>` string as 
 ```js
 {
   '@context': 'https://w3id.org/did/v1',
-  id: 'did:signor:mainet:0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4',
+  id: 'did:signor:mainet:0xA335e018d5d4bD9D772F25a053E91B58B8a160A8',
   publicKey: [{
-   	id: 'did:signor:mainet:0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4#key-1',
+   	id: 'did:signor:mainet:0xA335e018d5d4bD9D772F25a053E91B58B8a160A8#key-1',
    	type: 'secp256k1-koblitz',
    	controller: 'did:signor:mainet0x123fa34de487a908aaa44927430cdf01aebdaa0a67e3b03eac008356a7a920b4',
    	ethereumAddress: '0xA335e018d5d4bD9D772F25a053E91B58B8a160A8'}],
 }
 ```
 
-The following methods provided by the `DIDRegistry` contract can be used by a resolver to construct the DID document:
-
-- **getController(bytes32 id)**: returns the Ethereum address of the DID controller
-- **getSubject(bytes32 id)**: returns the Ethereum address of the DID controller
 
 ### Update
 
 Changes to an identity contract are made through executing transactions directly on the `DIDRegistry` contract, which is only be doable by the controller address:
 
-* **setController(bytes32 id, address newController)**: A DID controller address can transfer control of the DID to a different address.
+* **setController(address id, address newController)**: A DID controller address can transfer control of the DID to a different address.
 
 ### Delete
 
 The following method is provided by the ledger contract:
 
-* **deleteDID(bytes32 id)**
+* **deleteDID(address id)**
 
 Only the controller address is able to delete an existing DID. 
 
 # Security Considerations
 
-- DID documents are generated dynamically by off-chain resolvers that perform read from the ledger. This means that these resolvers are essentially trusted code and care must be taken when obtaining such a resolver. For instance integrity verification of library downloads should be performed.
+- DID documents are generated dynamically by off-chain resolvers that perform reads from the ledger. This means that these resolvers are essentially trusted code and care must be taken when obtaining such a resolver. For instance integrity verification of library downloads should be performed.
 - Key recovery is out of scope of this method. Proper key management in user-level wallets or additional smart contracts should be implemented. 
 
 # Privacy Considerations
