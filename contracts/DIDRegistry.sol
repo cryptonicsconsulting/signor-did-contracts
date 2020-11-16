@@ -28,7 +28,7 @@ contract DIDRegistry {
     mapping(address => DID) public dids;
 
    
-
+    uint constant MAX_KEYS = 32; 
 
     event CreatedDID(address id);
     event DeletedDID(address id);
@@ -101,13 +101,26 @@ contract DIDRegistry {
         public
         onlyController(id)
     {
-        
+        require(dids[id].keys.length < MAX_KEYS, "DID key limit has been reached");
         dids[id].keys.push(Secp256k1Key(key, _purpose));
 
     }
 
-    function getKeysLength(address id) public view returns(uint) {
-        return dids[id].keys.length;
+
+    function removeKey (address id, uint index)
+        public
+        onlyController(id)
+    {
+        
+        if (dids[id].keys.length > 1) {
+            dids[id].keys[index] = dids[id].keys[dids[id].keys.length-1];
+        }
+        dids[id].keys.pop();
+
+    }
+
+    function getKeysLength(address id) public view returns(uint8) {
+        return uint8(dids[id].keys.length);
     }
 
     function getKey(address id, uint index) public view returns (byte[65] memory , uint) {
