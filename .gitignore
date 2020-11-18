@@ -57,3 +57,6 @@ node_modules
 #Hardhat files
 cache
 artifacts
+
+#MacOS
+.DS_Store
