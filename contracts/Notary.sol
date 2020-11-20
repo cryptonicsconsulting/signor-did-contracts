@@ -17,7 +17,7 @@ contract Notary {
   }
 
   
-  function writeRecord(bytes32 _hash, bytes memory sig) public {
+  function setRecord(bytes32 _hash, bytes memory sig) public {
     require(records[_hash].timestamp == 0,"This document has already been recorded");
     require(sig.length == 0 || sig.length == 65, "Signature must be emptry or 65 bytes"); 
     records[_hash].signature = sig;
