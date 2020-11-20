@@ -28,6 +28,7 @@
     "hardhat": "^2.0.3"
   },
   "dependencies": {
+    "@openzeppelin/contracts": "^3.2.0",
     "eccrypto": "^1.1.5"
   }
 }
