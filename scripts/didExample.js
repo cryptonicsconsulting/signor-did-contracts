@@ -18,7 +18,7 @@ async function main() {
 
 
     //init the library
-    lib.init(didContract.address,signers[0]);
+    await lib.init(didContract.address,signers[0]);
 
     //create a did
     let did = await lib.createDID(signers[1].address);
