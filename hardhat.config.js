@@ -18,5 +18,13 @@ task("accounts", "Prints the list of accounts", async () => {
  */
 module.exports = {
   solidity: "0.6.12",
+  networks: {
+    rinkeby: {
+      url: "https://rinkeby.infura.io/v3/"+process.env.PROJECT_ID,
+      accounts: {
+        mnemonic: process.env.MNEMONIC
+      }
+    }
+  }
 };
 
