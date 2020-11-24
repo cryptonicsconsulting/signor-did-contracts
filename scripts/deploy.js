@@ -19,7 +19,14 @@ async function main() {
 
   await did.deployed();
 
-  console.log("DIDGREgistry deployed to:", did.address);
+  const Notary = await hre.ethers.getContractFactory("Notary");
+  const notary = await Notary.deploy();
+
+  await notary.deployed();
+
+  console.log("DIDRegistry deployed to:", did.address);
+
+  console.log("Notary deployed to:", notary.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
