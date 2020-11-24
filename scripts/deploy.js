@@ -24,6 +24,8 @@ async function main() {
 
   await notary.deployed();
 
+  console.log("DIDRegistry deployed to:", did.address);
+
   console.log("Notary deployed to:", notary.address);
 }
 
