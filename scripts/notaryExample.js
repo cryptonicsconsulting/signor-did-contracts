@@ -1,7 +1,7 @@
 const { Contract } = require("ethers");
 const hre = require("hardhat");
 
-const lib = require("../lib/notaryLib");
+const lib = require("../lib/notary");
 
 
 
