@@ -18,14 +18,14 @@ task("accounts", "Prints the list of accounts", async () => {
  * @type import('hardhat/config').HardhatUserConfig
  */
 module.exports = {
-  solidity: "0.6.12",
-  networks: {
-    rinkeby: {
-      url: "https://rinkeby.infura.io/v3/"+process.env.PROJECT_ID,
-      accounts: {
-        mnemonic: process.env.MNEMONIC
-      }
-    }
-  }
+  solidity: "0.7.6",
+  // networks: {
+  //   rinkeby: {
+  //     url: "https://rinkeby.infura.io/v3/"+process.env.PROJECT_ID,
+  //     accounts: {
+  //       mnemonic: process.env.MNEMONIC
+  //     }
+  //   }
+  // }
 };
 
