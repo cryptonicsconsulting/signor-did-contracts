@@ -3,5 +3,5 @@ A smart contract system for decentralized identity management compliant with the
 
 The Signor DID method specification can be found [here](https://github.com/cryptonicsconsulting/signor-did-contracts/blob/master/did-method-spec.md).
 
-A library for Node.ja and browser can be found in https://github.com/cryptonicsconsulting/signor-did-contracts/tree/master/lib.
+A library for Node.js and browser can be found in https://github.com/cryptonicsconsulting/signor-did-contracts/tree/master/lib.
 
