@@ -35,7 +35,7 @@ async function main() {
 
 
     //verifier: retrieve credential from for a DID
-    let retrievedCredentialStr = await zkReg.getCredential(signers[1].address);
+    let retrievedCredentialStr = await zkReg.getCredential(signers[0].address);
     if (retrievedCredentialStr!="") {
       let retrievedCredential = JSON.parse(retrievedCredentialStr);
 
