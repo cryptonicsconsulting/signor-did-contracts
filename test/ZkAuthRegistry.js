@@ -59,4 +59,12 @@ describe("ZkAuthRegistry", function() {
        
     });
 
+    it("should return empty credential string for DID wihout credential", async function() {
+        
+        let res = await zkAuth.getCredential(accounts[2].address);
+        expect(res).to.equal("");  
+         
+       
+    });
+
 });
