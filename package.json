@@ -25,7 +25,7 @@
     "chai": "^4.2.0",
     "ethereum-waffle": "^3.2.1",
     "ethers": "^5.0.26",
-    "hardhat": "^2.0.8"
+    "hardhat": "^2.12.5"
   },
   "dependencies": {
     "@nuid/zk": "^0.1.1",
